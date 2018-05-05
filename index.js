@@ -12,7 +12,7 @@ const finalHandler = () => async (ctx, next) => {
     } else {
       ctx.response.status = 500;
 
-      if (NODE_ENV !== 'production') {
+      if (NODE_ENV === 'development') {
         ctx.response.body = { error };
       }
     }
