@@ -1,23 +1,19 @@
 {
   "name": "@yoctol/koa-final-handler",
-  "version": "0.0.0",
   "description": "Final handler middleware for koa.",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest"
-  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/yoctol/koa-final-handler"
   },
-  "keywords": [
-    "koa",
-    "middleware",
-    "handler",
-    "final-handler"
+  "version": "0.0.0",
+  "main": "index.js",
+  "files": [
+    "index.js"
   ],
-  "author": "",
-  "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.3",
@@ -25,7 +21,36 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "eslint": "^4.19.1",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-config-yoctol-base": "^0.15.1",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-prettier": "^2.6.0",
+    "husky": "^0.14.3",
     "jest": "^22.4.3",
-    "prettier": "^1.12.1"
+    "lint-staged": "^7.1.0",
+    "prettier": "^1.12.1",
+    "prettier-package-json": "^1.6.0"
+  },
+  "keywords": [
+    "final-handler",
+    "handler",
+    "koa",
+    "middleware"
+  ],
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "package.json": [
+      "prettier-package-json --write",
+      "prettier package.json --write",
+      "git add"
+    ],
+    ".babelrc": [
+      "prettier .babelrc --write",
+      "git add"
+    ]
   }
 }
