@@ -28,6 +28,16 @@ const createContext = ({ status }) => ({
   throw: jest.fn(),
 });
 
+const nodeEnv = process.env.NODE_ENV;
+
+beforeEach(() => {
+  jest.resetModules();
+});
+
+afterEach(() => {
+  process.env.NODE_ENV = nodeEnv;
+});
+
 it('should be defined', () => {
   expect(finalHandler).toBeDefined();
 });
@@ -67,7 +77,38 @@ describe('finalHandler', () => {
     await middleware(ctx, next);
 
     expect(next).toBeCalled();
-    expect(ctx.response.body).toEqual({ error });
     expect(ctx.app.emit).toBeCalledWith('error', error, ctx);
+  });
+
+  it('append error on response.body when NODE_ENV is `development`', async () => {
+    process.env.NODE_ENV = 'development';
+
+    const finalHandler = require('../');
+    const middleware = finalHandler();
+
+    const error = new Error('my error');
+    const ctx = createContext({ status: 500 });
+    const next = jest.fn(() => Promise.reject(error));
+    console.error = jest.fn();
+
+    await middleware(ctx, next);
+
+    expect(ctx.response.body).toEqual({ error });
+  });
+
+  it('will not get error on response.body when NODE_ENV is `production`', async () => {
+    process.env.NODE_ENV = 'production';
+
+    const finalHandler = require('../');
+    const middleware = finalHandler();
+
+    const error = new Error('my error');
+    const ctx = createContext({ status: 500 });
+    const next = jest.fn(() => Promise.reject(error));
+    console.error = jest.fn();
+
+    await middleware(ctx, next);
+
+    expect(ctx.response.body).toBeUndefined();
   });
 });

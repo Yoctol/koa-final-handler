@@ -8,9 +8,7 @@
   },
   "version": "0.0.0",
   "main": "index.js",
-  "files": [
-    "index.js"
-  ],
+  "files": ["index.js"],
   "scripts": {
     "test": "jest"
   },
@@ -32,25 +30,19 @@
     "prettier": "^1.12.1",
     "prettier-package-json": "^1.6.0"
   },
-  "keywords": [
-    "final-handler",
-    "handler",
-    "koa",
-    "middleware"
-  ],
+  "keywords": ["final-handler", "handler", "koa", "middleware"],
+  "jest": {
+    "setupFiles": ["./test/configure-env.js"],
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": ["node_modules/"]
+  },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
+    "*.js": ["eslint --fix", "git add"],
     "package.json": [
       "prettier-package-json --write",
       "prettier package.json --write",
       "git add"
     ],
-    ".babelrc": [
-      "prettier .babelrc --write",
-      "git add"
-    ]
+    ".babelrc": ["prettier .babelrc --write", "git add"]
   }
 }
