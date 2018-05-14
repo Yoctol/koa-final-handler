@@ -1,3 +1,6 @@
+import compose from 'koa-compose';
+import validate, { object, string } from 'koa-context-validator';
+
 import finalHandler from '../';
 
 const middleware = finalHandler();
@@ -18,6 +21,7 @@ const createContext = ({ status }) => ({
       'accept-language': 'en,zh;q=0.8,zh-TW;q=0.6',
       cookie: 'gsScrollPos=0',
     },
+    body: {},
   },
   response: {
     status,
@@ -111,4 +115,26 @@ describe('finalHandler', () => {
 
     expect(ctx.response.body).toBeUndefined();
   });
+});
+
+it('should support Joi errors', async () => {
+  const composed = compose([
+    middleware,
+    validate({
+      body: object().keys({
+        username: string().required(),
+      }),
+    }),
+  ]);
+
+  const ctx = createContext({});
+  const next = jest.fn(() => Promise.resolve());
+
+  await composed(ctx, next);
+
+  expect(ctx.response.status).toEqual(400);
+  expect(ctx.response.body).toHaveProperty(
+    'error.message',
+    '"username" is required'
+  );
 });
