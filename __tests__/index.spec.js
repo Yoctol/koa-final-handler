@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import compose from 'koa-compose';
 import validate, { object, string } from 'koa-context-validator';
 
@@ -47,7 +48,6 @@ it('should be defined', () => {
 });
 
 it('should return middleware after executed', () => {
-  const middleware = finalHandler();
   expect(middleware).toBeInstanceOf(Function);
 });
 
