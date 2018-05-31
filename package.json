@@ -8,11 +8,13 @@
   },
   "version": "0.1.1",
   "main": "index.js",
-  "files": [
-    "index.js"
-  ],
+  "files": ["index.js"],
   "scripts": {
-    "test": "jest"
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "lint:staged": "lint-staged",
+    "test": "npm run lint && npm run testonly",
+    "testonly": "jest"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -34,34 +36,20 @@
     "prettier": "^1.12.1",
     "prettier-package-json": "^1.6.0"
   },
-  "keywords": [
-    "final-handler",
-    "handler",
-    "koa",
-    "middleware"
-  ],
+  "keywords": ["final-handler", "handler", "koa", "middleware"],
   "jest": {
-    "setupFiles": [
-      "./test/configure-env.js"
-    ],
+    "setupFiles": ["./test/configure-env.js"],
     "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "node_modules/"
-    ]
+    "testPathIgnorePatterns": ["node_modules/"]
   },
   "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
+    "*.{json,md}": ["prettier --write", "git add"],
+    "*.js": ["eslint --fix", "git add"],
     "package.json": [
       "prettier-package-json --write",
-      "prettier package.json --write",
+      "prettier --write",
       "git add"
     ],
-    ".babelrc": [
-      "prettier .babelrc --write",
-      "git add"
-    ]
+    ".babelrc": ["prettier --parser json --write", "git add"]
   }
 }
