@@ -8,6 +8,9 @@
   },
   "version": "0.1.1",
   "main": "index.js",
+  "engines": {
+    "node": ">=7.6"
+  },
   "files": ["index.js"],
   "scripts": {
     "lint": "eslint .",
