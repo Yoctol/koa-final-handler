@@ -8,18 +8,17 @@
   },
   "version": "0.1.1",
   "main": "index.js",
-  "engines": {
-    "node": ">=7.6"
-  },
-  "files": [
-    "index.js"
-  ],
+  "files": ["index.js"],
   "scripts": {
+    "precommit": "lint-staged",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
     "lint:staged": "lint-staged",
     "test": "npm run lint && npm run testonly",
     "testonly": "jest"
+  },
+  "dependencies": {
+    "http-status": "^1.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -42,41 +41,23 @@
     "prettier": "^1.12.1",
     "prettier-package-json": "^1.6.0"
   },
-  "keywords": [
-    "final-handler",
-    "handler",
-    "koa",
-    "middleware"
-  ],
+  "keywords": ["final-handler", "handler", "koa", "middleware"],
+  "engines": {
+    "node": ">=7.6"
+  },
   "jest": {
-    "setupFiles": [
-      "./test/configure-env.js"
-    ],
+    "setupFiles": ["./test/configure-env.js"],
     "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "node_modules/"
-    ]
+    "testPathIgnorePatterns": ["node_modules/"]
   },
   "lint-staged": {
-    "*.{json,md}": [
-      "prettier --write",
-      "git add"
-    ],
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ],
+    "*.{json,md}": ["prettier --write", "git add"],
+    "*.js": ["eslint --fix", "git add"],
     "package.json": [
       "prettier-package-json --write",
       "prettier --write",
       "git add"
     ],
-    ".babelrc": [
-      "prettier --parser json --write",
-      "git add"
-    ]
-  },
-  "dependencies": {
-    "http-status": "^1.2.0"
+    ".babelrc": ["prettier --parser json --write", "git add"]
   }
 }
