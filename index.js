@@ -1,3 +1,5 @@
+const HTTP_STATUS = require('http-status');
+
 const { NODE_ENV } = process.env;
 
 const finalHandler = () => async (ctx, next) => {
@@ -25,6 +27,15 @@ const finalHandler = () => async (ctx, next) => {
         ctx.response.body = { error };
       }
     }
+
+    if (!ctx.response.body) {
+      ctx.response.body = {
+        error: {
+          message: HTTP_STATUS[ctx.response.status],
+        },
+      };
+    }
+
     ctx.app.emit('error', error, ctx);
   }
 };
