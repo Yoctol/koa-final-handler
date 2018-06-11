@@ -1,12 +1,13 @@
 /* eslint-disable no-shadow */
 import compose from 'koa-compose';
 import validate, { object, string } from 'koa-context-validator';
+import createError from 'http-errors';
 
 import finalHandler from '../';
 
 const middleware = finalHandler();
 
-const createContext = ({ status }) => ({
+const createContext = ({ status } = {}) => ({
   request: {
     method: 'GET',
     url: '/private',
@@ -36,6 +37,7 @@ const createContext = ({ status }) => ({
 const nodeEnv = process.env.NODE_ENV;
 
 beforeEach(() => {
+  console.error = jest.fn();
   jest.resetModules();
 });
 
@@ -74,9 +76,8 @@ describe('finalHandler', () => {
 
   it('call error if error happens', async () => {
     const error = new Error('my error');
-    const ctx = createContext({ status: 500 });
+    const ctx = createContext();
     const next = jest.fn(() => Promise.reject(error));
-    console.error = jest.fn();
 
     await middleware(ctx, next);
 
@@ -91,50 +92,73 @@ describe('finalHandler', () => {
     const middleware = finalHandler();
 
     const error = new Error('my error');
-    const ctx = createContext({ status: 500 });
+    const ctx = createContext();
     const next = jest.fn(() => Promise.reject(error));
-    console.error = jest.fn();
 
     await middleware(ctx, next);
 
-    expect(ctx.response.body).toEqual({ error });
+    expect(ctx.response.body).toEqual({
+      error,
+    });
   });
 
-  it('will not get error on response.body when NODE_ENV is `production`', async () => {
+  it('put status message to error message', async () => {
+    process.env.NODE_ENV = 'development';
+
+    const finalHandler = require('../');
+    const middleware = finalHandler();
+
+    const error = createError(401);
+    const ctx = createContext();
+    const next = jest.fn(() => Promise.reject(error));
+
+    await middleware(ctx, next);
+
+    expect(ctx.response.body).toEqual({
+      error: {
+        message: 'Unauthorized',
+      },
+    });
+  });
+
+  it('will not get error details on response.body when NODE_ENV is `production`', async () => {
     process.env.NODE_ENV = 'production';
 
     const finalHandler = require('../');
     const middleware = finalHandler();
 
     const error = new Error('my error');
-    const ctx = createContext({ status: 500 });
+    const ctx = createContext();
     const next = jest.fn(() => Promise.reject(error));
-    console.error = jest.fn();
 
     await middleware(ctx, next);
 
-    expect(ctx.response.body).toBeUndefined();
+    expect(ctx.response.body).toEqual({
+      error: {
+        message: 'Internal Server Error',
+      },
+    });
   });
-});
 
-it('should support Joi errors', async () => {
-  const composed = compose([
-    middleware,
-    validate({
-      body: object().keys({
-        username: string().required(),
+  it('should support Joi errors', async () => {
+    const composed = compose([
+      middleware,
+      validate({
+        body: object().keys({
+          username: string().required(),
+        }),
       }),
-    }),
-  ]);
+    ]);
 
-  const ctx = createContext({});
-  const next = jest.fn(() => Promise.resolve());
+    const ctx = createContext();
+    const next = jest.fn(() => Promise.resolve());
 
-  await composed(ctx, next);
+    await composed(ctx, next);
 
-  expect(ctx.response.status).toEqual(400);
-  expect(ctx.response.body).toHaveProperty(
-    'error.message',
-    '"username" is required'
-  );
+    expect(ctx.response.status).toEqual(400);
+    expect(ctx.response.body).toHaveProperty(
+      'error.message',
+      '"username" is required'
+    );
+  });
 });
