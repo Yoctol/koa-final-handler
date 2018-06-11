@@ -1,5 +1,6 @@
 # koa-final-handler
 
+[![Build Status](https://travis-ci.org/Yoctol/koa-final-handler.svg?branch=master)](https://travis-ci.org/Yoctol/koa-final-handler)
 [![npm](https://img.shields.io/npm/v/@yoctol/koa-final-handler.svg)](https://www.npmjs.com/package/@yoctol/koa-final-handler)
 
 > Final handler middleware for [koa](https://github.com/koajs/koa)
