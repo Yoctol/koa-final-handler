@@ -162,13 +162,13 @@ describe('finalHandler', () => {
     );
   });
 
-  it('if have error message return it', async () => {
+  it('return error message if have', async () => {
     const finalHandler = require('../');
     const middleware = finalHandler();
 
-    const error = new Error('have error msg');
+    const error = createError(400, 'have error msg');
     const ctx = createContext();
-    const next = jest.fn(() => Promise.reject(error));
+    const next = jest.fn().mockRejectedValue(error);
 
     await middleware(ctx, next);
 
@@ -179,13 +179,13 @@ describe('finalHandler', () => {
     });
   });
 
-  it('if no error message return http status', async () => {
+  it('return http status if no error message', async () => {
     const finalHandler = require('../');
     const middleware = finalHandler();
 
     const error = new Error();
     const ctx = createContext();
-    const next = jest.fn(() => Promise.reject(error));
+    const next = jest.fn().mockRejectedValue(error);
 
     await middleware(ctx, next);
 

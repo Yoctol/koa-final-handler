@@ -32,7 +32,7 @@ const finalHandler = () => async (ctx, next) => {
       ctx.response.body = {
         error: {
           message:
-            error.message && NODE_ENV !== 'production'
+            error.message && ctx.response.status < 500
               ? error.message
               : HTTP_STATUS[ctx.response.status],
         },
