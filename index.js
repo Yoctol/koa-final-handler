@@ -29,10 +29,12 @@ const finalHandler = () => async (ctx, next) => {
     }
 
     if (!ctx.response.body) {
+      let msg;
+      if (error.message && NODE_ENV !== 'production') msg = error.message;
+      else msg = HTTP_STATUS[ctx.response.status];
+
       ctx.response.body = {
-        error: {
-          message: HTTP_STATUS[ctx.response.status],
-        },
+        error: { message: msg },
       };
     }
 

@@ -161,4 +161,38 @@ describe('finalHandler', () => {
       '"username" is required'
     );
   });
+
+  it('if have error message return it', async () => {
+    const finalHandler = require('../');
+    const middleware = finalHandler();
+
+    const error = new Error('have error msg');
+    const ctx = createContext();
+    const next = jest.fn(() => Promise.reject(error));
+
+    await middleware(ctx, next);
+
+    expect(ctx.response.body).toEqual({
+      error: {
+        message: 'have error msg',
+      },
+    });
+  });
+
+  it('if no error message return http status', async () => {
+    const finalHandler = require('../');
+    const middleware = finalHandler();
+
+    const error = new Error();
+    const ctx = createContext();
+    const next = jest.fn(() => Promise.reject(error));
+
+    await middleware(ctx, next);
+
+    expect(ctx.response.body).toEqual({
+      error: {
+        message: 'Internal Server Error',
+      },
+    });
+  });
 });
