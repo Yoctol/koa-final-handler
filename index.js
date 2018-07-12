@@ -31,7 +31,10 @@ const finalHandler = () => async (ctx, next) => {
     if (!ctx.response.body) {
       ctx.response.body = {
         error: {
-          message: HTTP_STATUS[ctx.response.status],
+          message:
+            error.message && ctx.response.status < 500
+              ? error.message
+              : HTTP_STATUS[ctx.response.status],
         },
       };
     }
