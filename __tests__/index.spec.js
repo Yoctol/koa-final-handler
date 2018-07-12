@@ -3,7 +3,7 @@ import compose from 'koa-compose';
 import validate, { object, string } from 'koa-context-validator';
 import createError from 'http-errors';
 
-import finalHandler from '../';
+import finalHandler from '..';
 
 const middleware = finalHandler();
 
