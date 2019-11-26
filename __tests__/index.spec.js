@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import compose from 'koa-compose';
-import validate, { object, string } from 'koa-context-validator';
 import createError from 'http-errors';
+import validate, { object, string } from 'koa-context-validator';
 
 import finalHandler from '..';
 
