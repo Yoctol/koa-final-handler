@@ -1,6 +1,6 @@
 {
   "name": "@yoctol/koa-final-handler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Final handler middleware for koa.",
   "license": "MIT",
   "repository": {
