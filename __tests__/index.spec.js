@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import compose from 'koa-compose';
 import createError from 'http-errors';
-import validate, { object, string } from 'koa-context-validator';
+import validate, { Joi } from 'koa-context-validator';
 
 import finalHandler from '..';
 
@@ -88,7 +88,7 @@ describe('finalHandler', () => {
   it('append error on response.body when NODE_ENV is `development`', async () => {
     process.env.NODE_ENV = 'development';
 
-    const finalHandler = require('../');
+    const finalHandler = require('..');
     const middleware = finalHandler();
 
     const error = new Error('my error');
@@ -105,7 +105,7 @@ describe('finalHandler', () => {
   it('put status message to error message', async () => {
     process.env.NODE_ENV = 'development';
 
-    const finalHandler = require('../');
+    const finalHandler = require('..');
     const middleware = finalHandler();
 
     const error = createError(401);
@@ -124,7 +124,7 @@ describe('finalHandler', () => {
   it('will not get error details on response.body when NODE_ENV is `production`', async () => {
     process.env.NODE_ENV = 'production';
 
-    const finalHandler = require('../');
+    const finalHandler = require('..');
     const middleware = finalHandler();
 
     const error = new Error('my error');
@@ -144,8 +144,8 @@ describe('finalHandler', () => {
     const composed = compose([
       middleware,
       validate({
-        body: object().keys({
-          username: string().required(),
+        body: Joi.object().keys({
+          username: Joi.string().required(),
         }),
       }),
     ]);
@@ -163,7 +163,7 @@ describe('finalHandler', () => {
   });
 
   it('return error message if have', async () => {
-    const finalHandler = require('../');
+    const finalHandler = require('..');
     const middleware = finalHandler();
 
     const error = createError(400, 'have error msg');
@@ -180,7 +180,7 @@ describe('finalHandler', () => {
   });
 
   it('return http status if no error message', async () => {
-    const finalHandler = require('../');
+    const finalHandler = require('..');
     const middleware = finalHandler();
 
     const error = new Error();
