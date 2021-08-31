@@ -16,7 +16,7 @@ const finalHandler = () => async (ctx, next) => {
       ctx.response.body = {
         error: {
           message: error.details
-            ? error.details.map(d => d.message).join('\n')
+            ? error.details.map((d) => d.message).join('\n')
             : null,
         },
       };
